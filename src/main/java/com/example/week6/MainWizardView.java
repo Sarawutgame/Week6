@@ -35,6 +35,10 @@ public class MainWizardView extends VerticalLayout {
         radio_sex.setItems("Male", "Female");
         dollars.setPrefixComponent(new Span("$"));
 
+        position.setItems("Student", " Teacher");
+        school.setItems("Hogwarts", "Beauxbatons", "Durmstrang");
+        house.setItems("Gryffindor", "Ravenclaw", "Hufflepuff", "Slyther");
+
         b_back = new Button("<<<");
         b_create = new Button("Create");
         b_update = new Button("Update");
