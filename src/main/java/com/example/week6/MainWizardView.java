@@ -9,6 +9,9 @@ import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.ArrayList;
 
 @Route(value= "/mainPage.it")
 public class MainWizardView extends VerticalLayout {
@@ -20,7 +23,12 @@ public class MainWizardView extends VerticalLayout {
 
     private HorizontalLayout panel;
 
+    private Wizards wizards;
+
+    private int index_person;
+
     public MainWizardView() {
+        wizards = new Wizards();
         panel = new HorizontalLayout();
         fullName = new TextField("Fullname");
         dollars = new TextField("Dollars");
@@ -32,7 +40,7 @@ public class MainWizardView extends VerticalLayout {
         house.setLabel("House");
         radio_sex = new RadioButtonGroup<>();
         radio_sex.setLabel("Gender :");
-        radio_sex.setItems("Male", "Female");
+        radio_sex.setItems("m", "f");
         dollars.setPrefixComponent(new Span("$"));
 
         position.setItems("Student", " Teacher");
@@ -48,5 +56,51 @@ public class MainWizardView extends VerticalLayout {
         panel.add(b_back, b_create, b_update, b_delete, b_go);
 
         this.add(fullName, radio_sex, position, dollars, school, house, panel);
+
+        this.wizards.model = WebClient.create().get()
+                .uri("http://127.0.0.1:8080/wizards")
+                .retrieve().bodyToMono(ArrayList.class).block();
+
+
+        b_back.addClickListener(event ->{
+            if(index_person - 1 < 0){
+                index_person = 0;
+                show_data();
+            }
+            else {
+                index_person -= 1;
+                show_data();
+            }
+        });
+        b_go.addClickListener(event ->{
+           if(index_person + 1 >= this.wizards.model.size()){
+               index_person = this.wizards.model.size() - 1;
+               show_data();
+           }
+           else{
+               index_person += 1;
+               show_data();
+           }
+        });
+    }
+
+    private void show_data(){
+        if (this.wizards.model.size() != 0){
+            this.fullName.setValue(this.wizards.model.get(index_person).getName());
+            this.dollars.setValue(this.wizards.model.get(index_person).getMoney());
+            this.position.setValue(this.wizards.model.get(index_person).getPosition());
+            this.school.setValue(this.wizards.model.get(index_person).getSchool());
+            this.house.setValue(this.wizards.model.get(index_person).getHouse());
+            this.radio_sex.setValue(this.wizards.model.get(index_person).getSex());
+
+        }
+        else{
+            this.fullName.setValue("");
+            this.dollars.setValue("");
+            this.position.setValue("");
+            this.school.setValue("");
+            this.house.setValue("");
+            this.radio_sex.setValue("m");
+        }
     }
 }

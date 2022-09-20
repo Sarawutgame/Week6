@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,9 +22,10 @@ public class WizardController {
 
     @RequestMapping(value ="/wizards", method = RequestMethod.GET)
     public ResponseEntity<?> getWizards(){
-//        wizards.model = wizardService.retrieveWizard();
+        wizards.model = (ArrayList<Wizard>) wizardService.retrieveWizard();
         List<Wizard> wizards_list = wizardService.retrieveWizard();
-        return ResponseEntity.ok(wizards_list);
+        return ResponseEntity.ok(this.wizards.model);
+//        return ResponseEntity.ok(wizards_list);
     }
     @RequestMapping(value = "/addWizard", method = RequestMethod.POST)
     public ResponseEntity<?> addWizard(@RequestParam("sex") String sex,

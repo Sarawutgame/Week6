@@ -38,4 +38,8 @@ public class WizardService {
     public Wizard retrieveByName(String name){
         return repository.findByName(name);
     }
+
+    public Wizard findByID(String _id){
+        return repository.findId(_id);
+    }
 }
