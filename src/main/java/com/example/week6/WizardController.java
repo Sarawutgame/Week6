@@ -22,9 +22,9 @@ public class WizardController {
 
     @RequestMapping(value ="/wizards", method = RequestMethod.GET)
     public ResponseEntity<?> getWizards(){
-        wizards.model = (ArrayList<Wizard>) wizardService.retrieveWizard();
+//        wizards.model = (ArrayList<Wizard>) wizardService.retrieveWizard();
         List<Wizard> wizards_list = wizardService.retrieveWizard();
-        return ResponseEntity.ok(this.wizards.model);
+        return ResponseEntity.ok(wizards_list);
 //        return ResponseEntity.ok(wizards_list);
     }
     @RequestMapping(value = "/addWizard", method = RequestMethod.POST)
